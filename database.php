@@ -1,42 +1,50 @@
 <?php
-// Database configuration for Go, Grow, Glow Food Tracker
-// Group 3 - Food Pyramid
+// Secure Azure-compatible Database configuration for Go, Grow, Glow Food Tracker
 
-define('DB_HOST', 'localhost');
-define('DB_NAME', 'food_pyramid_db'); 
-define('DB_USER', 'root');
-define('DB_PASS', 'root'); 
-define('DB_CHARSET', 'utf8mb4');
+$host = 'gp-grow-glow-tracker-server.mysql.database.azure.com';
+$dbname = 'gp-grow-glow-tracker-database';
+$username = 'lofcqmeihf';
+$password = 'root123*'; // Replace with your actual password
+$port = 3306; // Default MySQL port
 
 class Database {
-    private $host = DB_HOST;
-    private $db_name = DB_NAME;
-    private $username = DB_USER;
-    private $password = DB_PASS;
-    private $charset = DB_CHARSET;
+    private $host;
+    private $db_name;
+    private $username;
+    private $password;
+    private $charset = 'utf8mb4';
+    private $port;
     public $conn;
+
+    public function __construct($host, $db_name, $username, $password, $port = 3306) {
+        $this->host = $host;
+        $this->db_name = $db_name;
+        $this->username = $username;
+        $this->password = $password;
+        $this->port = $port;
+    }
 
     public function getConnection() {
         $this->conn = null;
-        
+
         try {
-            $dsn = "mysql:host={$this->host};dbname={$this->db_name};charset={$this->charset}";
-            $this->conn = new PDO($dsn, $this->username, $this->password);
-            $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            $this->conn->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
-        } catch(PDOException $exception) {
-            echo "Connection error: " . $exception->getMessage();
+            $dsn = "mysql:host={$this->host};port={$this->port};dbname={$this->db_name};charset={$this->charset}";
+            $this->conn = new PDO($dsn, $this->username, $this->password, [
+                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+                PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+            ]);
+        } catch (PDOException $e) {
+            die("Connection error: " . $e->getMessage());
         }
 
         return $this->conn;
     }
 }
 
-// Create database connection instance
-$database = new Database();
+// Create and connect
+$database = new Database($host, $dbname, $username, $password, $port);
 $db = $database->getConnection();
 
-// Check connection
 if (!$db) {
     die("Database connection failed. Please check your configuration.");
 }
