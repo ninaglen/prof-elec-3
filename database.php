@@ -6,7 +6,7 @@ $dbname = 'gp-grow-glow-tracker-database';
 $username = 'lofcqmeihf@gp-grow-glow-tracker-server'; // Must include @server for Azure
 $password = 'root123*'; // Replace with actual password
 $port = 3306;
-$ssl_ca = __DIR__ . 'C:\phpsite\DigiCertGlobalRootG2.crt.pem'; // Adjust path as needed
+$ssl_ca = __DIR__ . 'C:\ssl\DigiCertGlobalRootG2.crt.pem'; // Adjust path as needed
 
 class Database {
     private $host;
